@@ -507,7 +507,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/07/%E8%A7%A3%E5%86%B3git%E6%8A%A5%E9%94%99-ssh-connect-to-host-github-com-port-22-Connection-timed-out/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/08/Vue%E5%AE%9E%E7%8E%B0%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%86%E7%89%87%E4%B8%8A%E4%BC%A0%EF%BC%8C%E5%8C%85%E6%8B%AC%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0%E4%BB%A5%E5%8F%8A%E4%B8%8A%E4%BC%A0%E8%BF%9B%E5%BA%A6%E6%9D%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -521,10 +521,14 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/02/07/%E8%A7%A3%E5%86%B3git%E6%8A%A5%E9%94%99-ssh-connect-to-host-github-com-port-22-Connection-timed-out/" class="post-title-link" itemprop="url">解决git报错:ssh:connect to host github.com port 22: Connection timed out</a>
+            <a href="/2023/02/08/Vue%E5%AE%9E%E7%8E%B0%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%86%E7%89%87%E4%B8%8A%E4%BC%A0%EF%BC%8C%E5%8C%85%E6%8B%AC%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0%E4%BB%A5%E5%8F%8A%E4%B8%8A%E4%BC%A0%E8%BF%9B%E5%BA%A6%E6%9D%A1/" class="post-title-link" itemprop="url">Vue实现大文件分片上传，包括断点续传以及上传进度条</a>
         </h2>
 
         <div class="post-meta">
+		  
+			<i class="fa fa-thumb-tack"></i>
+			<font color=7D26CD></font>
+			<span class="post-meta-divider"></span>
 		  
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -533,7 +537,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-02-07 21:55:25 / 修改时间：22:05:50" itemprop="dateCreated datePublished" datetime="2023-02-07T21:55:25+08:00">2023-02-07</time>
+              <time title="创建时间：2023-02-08 21:42:24 / 修改时间：21:45:58" itemprop="dateCreated datePublished" datetime="2023-02-08T21:42:24+08:00">2023-02-08</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -541,7 +545,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                  <a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a>
                 </span>
             </span>
 
@@ -556,11 +560,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>如题，git使用中突然报错</p>
-<p>ssh:connect to host github.com port 22: Connection timed out</p>
+          <h4 id="首先解释一下什么是分片上传"><a href="#首先解释一下什么是分片上传" class="headerlink" title="首先解释一下什么是分片上传"></a>首先解释一下什么是分片上传</h4><p>​		分片上传就是把一个大的文件分成若干块，一块一块的传输。这样做的好处可以减少重新上传的开销。比如：如果我们上传的文件是一个很大的文件，那么上传的时间应该会比较久，再加上网络不稳定各种因素的影响，很容易导致传输中断，用户除了重新上传文件外没有其他的办法，但是我们可以使用分片上传来解决这个问题。通过分片上传技术，如果网络传输中断，我们重新选择文件只需要传剩余的分片。而不需要重传整个文件，大大减少了重传的开销。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023/02/07/%E8%A7%A3%E5%86%B3git%E6%8A%A5%E9%94%99-ssh-connect-to-host-github-com-port-22-Connection-timed-out/#more" rel="contents">
+              <a class="btn" href="/2023/02/08/Vue%E5%AE%9E%E7%8E%B0%E5%A4%A7%E6%96%87%E4%BB%B6%E5%88%86%E7%89%87%E4%B8%8A%E4%BC%A0%EF%BC%8C%E5%8C%85%E6%8B%AC%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0%E4%BB%A5%E5%8F%8A%E4%B8%8A%E4%BC%A0%E8%BF%9B%E5%BA%A6%E6%9D%A1/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -585,7 +588,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -653,7 +656,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -711,7 +714,7 @@
   </div>
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共20.4k字</span>
+  <span class="post-count">博客全站共23.4k字</span>
 </div>
 
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
