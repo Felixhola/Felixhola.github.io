@@ -22,19 +22,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="欢迎来的我的个人博客 GitHub  CSDN">
+  <meta name="description" content="promise就不介绍了，来看这篇文章的js基础肯定都是有的 直接上干货：Promise.allSettled() 方法以 promise 组成的可迭代对象作为输入，并且返回一个 Promise 实例。当输入的所有 promise 都已敲定时（包括传递空的可迭代类型），返回的 promise 将兑现，并带有描述每个 promsie 结果的对象数组。 哈哈，看不懂了吧，那我来解释一下： 给这个all">
 <meta property="og:type" content="article">
-<meta property="og:title" content="欢迎光临">
-<meta property="og:url" content="http://example.com/2022/08/23/home/index.html">
+<meta property="og:title" content="Promise.allSettled()基础+在上传中的应用">
+<meta property="og:url" content="http://example.com/2023/03/16/Promise-allSettled-%E5%9F%BA%E7%A1%80-%E5%9C%A8%E4%B8%8A%E4%BC%A0%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="Yjx | blog">
-<meta property="og:description" content="欢迎来的我的个人博客 GitHub  CSDN">
+<meta property="og:description" content="promise就不介绍了，来看这篇文章的js基础肯定都是有的 直接上干货：Promise.allSettled() 方法以 promise 组成的可迭代对象作为输入，并且返回一个 Promise 实例。当输入的所有 promise 都已敲定时（包括传递空的可迭代类型），返回的 promise 将兑现，并带有描述每个 promsie 结果的对象数组。 哈哈，看不懂了吧，那我来解释一下： 给这个all">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-08-22T16:46:58.000Z">
-<meta property="article:modified_time" content="2022-09-14T18:55:10.190Z">
+<meta property="article:published_time" content="2023-03-16T14:49:11.000Z">
+<meta property="article:modified_time" content="2023-03-16T14:52:21.406Z">
 <meta property="article:author" content="姚渐新">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="前端">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2022/08/23/home/">
+<link rel="canonical" href="http://example.com/2023/03/16/Promise-allSettled-%E5%9F%BA%E7%A1%80-%E5%9C%A8%E4%B8%8A%E4%BC%A0%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -47,7 +49,7 @@
   };
 </script>
 
-  <title>欢迎光临 | Yjx | blog</title>
+  <title>Promise.allSettled()基础+在上传中的应用 | Yjx | blog</title>
   
 
 
@@ -167,7 +169,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/23/home/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/16/Promise-allSettled-%E5%9F%BA%E7%A1%80-%E5%9C%A8%E4%B8%8A%E4%BC%A0%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -180,30 +182,29 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          欢迎光临
+          Promise.allSettled()基础+在上传中的应用
         </h1>
 
         <div class="post-meta">
-		  
-			<i class="fa fa-thumb-tack"></i>
-			<font color=7D26CD></font>
-			<span class="post-meta-divider"></span>
 		  
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-08-23 00:46:58" itemprop="dateCreated datePublished" datetime="2022-08-23T00:46:58+08:00">2022-08-23</time>
+              <time title="创建时间：2023-03-16 22:49:11 / 修改时间：22:52:21" itemprop="dateCreated datePublished" datetime="2023-03-16T22:49:11+08:00">2023-03-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-15 02:55:10" itemprop="dateModified" datetime="2022-09-15T02:55:10+08:00">2022-09-15</time>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
               </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -223,9 +224,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>欢迎来的我的个人博客</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Felixhola">GitHub</a> </p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yjxkq99">CSDN</a></p>
+        <p>promise就不介绍了，来看这篇文章的js基础肯定都是有的</p>
+<h4 id="直接上干货："><a href="#直接上干货：" class="headerlink" title="直接上干货："></a>直接上干货：</h4><p>Promise.allSettled() 方法以 promise 组成的可迭代对象作为输入，并且返回一个 Promise 实例。当输入的所有 promise 都已敲定时（包括传递空的可迭代类型），返回的 promise 将兑现，并带有描述每个 promsie 结果的对象数组。</p>
+<p>哈哈，看不懂了吧，那我来解释一下：</p>
+<p>给这个allSettled传递的参数是一个可迭代对象，一般都会传一个数组，然后这个数组里面的每一项就是一个个的promise。然后这个allSettled返回的也是一个数组，里面的每一项，就是代表着我传给他的每一项的promise所对应着的结果，是成功或者是失败。待会我会给你一个例子</p>
+<span id="more"></span>
+
+<h4 id="至于这个可迭代对象，我简单讲讲"><a href="#至于这个可迭代对象，我简单讲讲" class="headerlink" title="至于这个可迭代对象，我简单讲讲"></a>至于这个可迭代对象，我简单讲讲</h4><p>可迭代对象（Iterable）是一个实现了Symbol.iterator属性的对象，这个属性返回一个迭代器（Iterator）对象。迭代器对象知道如何遍历该对象中的元素，并且具有next()方法来返回序列中的下一个值。</p>
+<p>在 JavaScript 中，可迭代对象包括 Array、String、Map、Set 等。这些对象都实现了Symbol.iterator属性，因此可以使用for…of循环或者使用迭代器来遍历其中的元素。</p>
+<p>可以使用迭代器的next()方法来逐个访问可迭代对象的元素，每次调用 next() 方法会返回一个包含 value 和 done 两个属性的对象，其中 value 表示迭代器当前返回的值，done 表示是否已经到达序列的末尾。</p>
+<h4 id="继续继续，我直接给你一个例子："><a href="#继续继续，我直接给你一个例子：" class="headerlink" title="继续继续，我直接给你一个例子："></a>继续继续，我直接给你一个例子：</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> promise1 = <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="number">3</span>);</span><br><span class="line"><span class="keyword">const</span> promise2 = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> <span class="built_in">setTimeout</span>(reject, <span class="number">100</span>, <span class="string">&#x27;foo&#x27;</span>));</span><br><span class="line"><span class="keyword">const</span> promises = [promise1, promise2];</span><br><span class="line"> </span><br><span class="line"><span class="title class_">Promise</span>.<span class="title function_">allSettled</span>(promises).</span><br><span class="line">  <span class="title function_">then</span>(<span class="function">(<span class="params">results</span>) =&gt;</span> results.<span class="title function_">forEach</span>(<span class="function">(<span class="params">result</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(result.<span class="property">status</span>)));</span><br><span class="line"> </span><br><span class="line"><span class="comment">// Expected output:</span></span><br><span class="line"><span class="comment">// &quot;fulfilled&quot;</span></span><br><span class="line"><span class="comment">// &quot;rejected&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>能看懂吗，如果没看懂我再解释一下。</p>
+<p>promise1是一个成功的promise；promise2是一个失败的promise。</p>
+<p>所以他们的结果对应的也就是fulfilled和rejected。</p>
+<h4 id="该方法的应用场景主要有以下两个："><a href="#该方法的应用场景主要有以下两个：" class="headerlink" title="该方法的应用场景主要有以下两个："></a>该方法的应用场景主要有以下两个：</h4><h5 id="并行处理多个Promise"><a href="#并行处理多个Promise" class="headerlink" title="并行处理多个Promise"></a>并行处理多个Promise</h5><p>Promise.allSettled() 方法可以用于并行处理多个Promise，等待所有的Promise都执行完成后再做进一步处理。这在处理多个独立的异步任务时非常有用。</p>
+<p>例如，在前端开发中，可能需要同时请求多个API获取数据，使用 Promise.allSettled() 可以并行请求这些API，然后等待所有API都返回结果后再做下一步处理。</p>
+<h5 id="统一处理多个Promise的结果"><a href="#统一处理多个Promise的结果" class="headerlink" title="统一处理多个Promise的结果"></a>统一处理多个Promise的结果</h5><p>Promise.allSettled() 方法返回一个Promise对象，该Promise对象的结果是一个包含所有Promise结果对象的数组。这个数组中的每个对象都表示对应的Promise的结果，可以通过遍历这个数组来统一处理多个Promise的结果。</p>
+<h4 id="我相信你肯定已经看懂了promise-allSettled的用法，那接下来我给你一个实战。"><a href="#我相信你肯定已经看懂了promise-allSettled的用法，那接下来我给你一个实战。" class="headerlink" title="我相信你肯定已经看懂了promise.allSettled的用法，那接下来我给你一个实战。"></a>我相信你肯定已经看懂了promise.allSettled的用法，那接下来我给你一个实战。</h4><p>关于promise.allSettled在大文件分片上传中，同时上传多个分片的应用：</p>
+<p>如果不了解大文件分片上传，可以去看看我的另外一篇博客，里面有详细介绍</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> chunks = [<span class="comment">/* 分片的 Promise 对象数组 */</span>];</span><br><span class="line"><span class="keyword">const</span> chunkCount = <span class="number">3</span>; <span class="comment">// 同时上传的分片数量</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> uploaded = []; <span class="comment">// 已上传成功的分片索引数组</span></span><br><span class="line"><span class="keyword">let</span> errors = []; <span class="comment">// 上传失败的分片索引数组</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">function</span> <span class="title function_">uploadChunks</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (uploaded.<span class="property">length</span> + errors.<span class="property">length</span> === chunks.<span class="property">length</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;本轮上传完成！可以根据errors数组的长度来判断是否开始走续传的逻辑&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">const</span> startFrom = uploaded.<span class="property">length</span> + errors.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">const</span> uploadPromises = chunks.<span class="title function_">slice</span>(startFrom, startFrom + chunkCount);</span><br><span class="line">  <span class="title class_">Promise</span>.<span class="title function_">allSettled</span>(uploadPromises).<span class="title function_">then</span>(<span class="function">(<span class="params">results</span>) =&gt;</span> &#123;</span><br><span class="line">    results.<span class="title function_">forEach</span>(<span class="function">(<span class="params">result, index</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (result.<span class="property">status</span> === <span class="string">&#x27;fulfilled&#x27;</span>) &#123;</span><br><span class="line">        uploaded.<span class="title function_">push</span>(startFrom + index);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        errors.<span class="title function_">push</span>(startFrom + index);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`第 <span class="subst">$&#123;startFrom + index + <span class="number">1</span>&#125;</span> 个分片上传失败：`</span>, result.<span class="property">reason</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="title function_">uploadChunks</span>();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="title function_">uploadChunks</span>();</span><br></pre></td></tr></table></figure>
+
+<p>在这个示例代码中，我们使用了 uploaded 数组和 errors 数组来记录已经上传成功和上传失败的分片的索引。同时，我们使用了 slice 方法来切割 chunks 数组，以确保只上传还未上传的分片。最后，我们使用递归来实现不断上传分片的过程，直到所有分片都上传完成。</p>
+<p>好了，我相信你已经明白了，晚安，宝！</p>
 
     </div>
 
@@ -271,7 +292,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2022/08/23/home/" title="欢迎光临">http://example.com/2022/08/23/home/</a>
+    <a href="http://example.com/2023/03/16/Promise-allSettled-%E5%9F%BA%E7%A1%80-%E5%9C%A8%E4%B8%8A%E4%BC%A0%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/" title="Promise.allSettled()基础+在上传中的应用">http://example.com/2023/03/16/Promise-allSettled-基础-在上传中的应用/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -281,6 +302,10 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
 
         
 
@@ -288,13 +313,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/08/22/Vue%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1%E7%9A%8411%E7%A7%8D%E6%96%B9%E6%B3%95/" rel="prev" title="Vue组件间通信的11种方法">
-      <i class="fa fa-chevron-left"></i> Vue组件间通信的11种方法
+    <a href="/2023/03/16/%E8%AF%A6%E8%A7%A3Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" rel="prev" title="详解Vue生命周期">
+      <i class="fa fa-chevron-left"></i> 详解Vue生命周期
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/08/24/JavaScript%E4%B8%ADMap%E6%96%B9%E6%B3%95%E7%9A%84%E8%AF%A6%E8%A7%A3/" rel="next" title="JavaScript中Map方法的详解">
-      JavaScript中Map方法的详解 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -358,6 +380,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E4%B8%8A%E5%B9%B2%E8%B4%A7%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">直接上干货：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%B3%E4%BA%8E%E8%BF%99%E4%B8%AA%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1%EF%BC%8C%E6%88%91%E7%AE%80%E5%8D%95%E8%AE%B2%E8%AE%B2"><span class="nav-number">2.</span> <span class="nav-text">至于这个可迭代对象，我简单讲讲</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%A7%E7%BB%AD%E7%BB%A7%E7%BB%AD%EF%BC%8C%E6%88%91%E7%9B%B4%E6%8E%A5%E7%BB%99%E4%BD%A0%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">继续继续，我直接给你一个例子：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%A5%E6%96%B9%E6%B3%95%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%BB%E8%A6%81%E6%9C%89%E4%BB%A5%E4%B8%8B%E4%B8%A4%E4%B8%AA%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">该方法的应用场景主要有以下两个：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAPromise"><span class="nav-number">4.1.</span> <span class="nav-text">并行处理多个Promise</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%9F%E4%B8%80%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAPromise%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="nav-number">4.2.</span> <span class="nav-text">统一处理多个Promise的结果</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%88%91%E7%9B%B8%E4%BF%A1%E4%BD%A0%E8%82%AF%E5%AE%9A%E5%B7%B2%E7%BB%8F%E7%9C%8B%E6%87%82%E4%BA%86promise-allSettled%E7%9A%84%E7%94%A8%E6%B3%95%EF%BC%8C%E9%82%A3%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%88%91%E7%BB%99%E4%BD%A0%E4%B8%80%E4%B8%AA%E5%AE%9E%E6%88%98%E3%80%82"><span class="nav-number">5.</span> <span class="nav-text">我相信你肯定已经看懂了promise.allSettled的用法，那接下来我给你一个实战。</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
