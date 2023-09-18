@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-flash.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景在滴滴实习过程中，在一个需求中发现了一个问题 有一块轮播图。这块轮播图展示的就是该司机城市所参与的保司，如果司机还没参与计划，城市就获取不到，这个时候就展示所有参与的保司 不同城市参与的保司一直在更新，这就需要去手动维护，但是这一点是给我们前端去维护的，我们把保司上传到一个平台上，我们接口是去请求的这个平台的数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对象内url链接太多时的优化">
+<meta property="og:url" content="http://example.com/2023/09/19/%E5%AF%B9%E8%B1%A1%E5%86%85url%E9%93%BE%E6%8E%A5%E5%A4%AA%E5%A4%9A%E6%97%B6%E7%9A%84%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Yjx | blog">
+<meta property="og:description" content="背景在滴滴实习过程中，在一个需求中发现了一个问题 有一块轮播图。这块轮播图展示的就是该司机城市所参与的保司，如果司机还没参与计划，城市就获取不到，这个时候就展示所有参与的保司 不同城市参与的保司一直在更新，这就需要去手动维护，但是这一点是给我们前端去维护的，我们把保司上传到一个平台上，我们接口是去请求的这个平台的数据。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-18T16:53:36.000Z">
+<meta property="article:modified_time" content="2023-09-18T17:00:25.145Z">
+<meta property="article:author" content="姚渐新">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/09/19/%E5%AF%B9%E8%B1%A1%E5%86%85url%E9%93%BE%E6%8E%A5%E5%A4%AA%E5%A4%9A%E6%97%B6%E7%9A%84%E4%BC%98%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>对象内url链接太多时的优化 | Yjx | blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+	<a target="_blank" rel="noopener" href="https://github.com/Felixhola" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yjx | blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/19/%E5%AF%B9%E8%B1%A1%E5%86%85url%E9%93%BE%E6%8E%A5%E5%A4%AA%E5%A4%9A%E6%97%B6%E7%9A%84%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="姚渐新">
+      <meta itemprop="description" content="代码的世界还需要加油探索">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yjx | blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          对象内url链接太多时的优化
+        </h1>
+
+        <div class="post-meta">
+		  
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-19 00:53:36 / 修改时间：01:00:25" itemprop="dateCreated datePublished" datetime="2023-09-19T00:53:36+08:00">2023-09-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在滴滴实习过程中，在一个需求中发现了一个问题</p>
+<p>有一块轮播图。这块轮播图展示的就是该司机城市所参与的保司，如果司机还没参与计划，城市就获取不到，这个时候就展示所有参与的保司</p>
+<p>不同城市参与的保司一直在更新，这就需要去手动维护，但是这一点是给我们前端去维护的，我们把保司上传到一个平台上，我们接口是去请求的这个平台的数据。</p>
+<span id="more"></span>
+
+<h3 id="最初的格式"><a href="#最初的格式" class="headerlink" title="最初的格式"></a>最初的格式</h3><p>最初的格式是，一个大对象。这个对象的key是id，代表城市id，value是logo链接。</p>
+<p>这样，我们每次维护的时候，很麻烦。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="number">0</span>:[</span><br><span class="line">        <span class="string">&#x27;url&#x27;</span>,<span class="string">&#x27;url&#x27;</span>,<span class="string">&#x27;url&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="number">1</span>:[</span><br><span class="line">        <span class="string">&#x27;url&#x27;</span>,<span class="string">&#x27;url&#x27;</span>,<span class="string">&#x27;url&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="number">2</span>:[</span><br><span class="line">        <span class="string">&#x27;url&#x27;</span>,<span class="string">&#x27;url&#x27;</span>,<span class="string">&#x27;url&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">    </span><br><span class="line">    .......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的对象有这些缺点：</p>
+<p>​    url链接太多，看起来非常杂乱</p>
+<p>​    完全看不出来，在某个城市id中，到底包含的是哪些保险公司，只能通过有几个url来判断有几个保险公司</p>
+<p>​    最初，我们得手动去一个一个修改，而且还得对着xlsx文件看，而且整个对象看起来会非常复杂，因为key是id。value是一堆url链接，每次找对应的城市id会很麻烦，而且找到后也不能很明显的看出来，我们找到的城市的id对不对，只能看一下保司logo数量对不对。</p>
+<h3 id="改造后的格式"><a href="#改造后的格式" class="headerlink" title="改造后的格式"></a>改造后的格式</h3><p>可以将这个对象改造，改造成如下格式：</p>
+<p><strong>有几个保司就加几个companyXXX，然后在每个城市id对应的value，将url换成对应的保司名字</strong></p>
+<p>这样的好处是，能清晰的看出，某个城市id，包含的到底是哪些保险公司</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;company1&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;中华联合财产保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;url&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;company2&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;众诚汽车保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;url&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    ......</span><br><span class="line">    <span class="string">&quot;2&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;中华联合财产保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;众诚汽车保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;中国太平洋财产保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;中国大地财产保险股份有限公司&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;3&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;中国大地财产保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;中华联合财产保险股份有限公司&quot;</span>,</span><br><span class="line">      <span class="string">&quot;众诚汽车保险股份有限公司&quot;</span></span><br><span class="line">    ],</span><br><span class="line">    ......</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>将对象这样改造后，整体可读性大大提升，不会像之前那样杂乱无章</p>
+<h3 id="问题解析"><a href="#问题解析" class="headerlink" title="问题解析"></a>问题解析</h3><p>相信有些同学肯定想到：</p>
+<h4 id="1、为什么要用数组格式，用对象不是很方便吗"><a href="#1、为什么要用数组格式，用对象不是很方便吗" class="headerlink" title="1、为什么要用数组格式，用对象不是很方便吗"></a>1、为什么要用数组格式，用对象不是很方便吗</h4><h5 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h5><p>这里的配置之所以不把各个保司写成对象形式，是因为这个数据是要通过后端返回给我的，后端对数据格式做了限制，必须是数组形式</p>
+<h4 id="2、为什么要用一维数组，不可以把多个保司以及对应的logo合并成一个数组吗"><a href="#2、为什么要用一维数组，不可以把多个保司以及对应的logo合并成一个数组吗" class="headerlink" title="2、为什么要用一维数组，不可以把多个保司以及对应的logo合并成一个数组吗"></a>2、为什么要用一维数组，不可以把多个保司以及对应的logo合并成一个数组吗</h4><h5 id="解答-1"><a href="#解答-1" class="headerlink" title="解答"></a>解答</h5><p>也是因为后端做的限制，必须是一维数组</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>业务那边会给我们一个xlsx文件，里面就是需要修改的每个城市以及对应的保司，我们需要去读取出数据，这里我写了另外一篇文章，感兴趣的同学可以去看看</p>
+<p><a target="_blank" rel="noopener" href="https://felixhola.github.io/2023/05/29/node%E8%AF%BB%E5%8F%96xlsx%E6%96%87%E4%BB%B6/#more">node读取xlsx文件</a></p>
+<p>当然，我们拿到配置后，也可以把他转成对象，转换方法就是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> keysNumbers = <span class="title class_">Object</span>.<span class="title function_">keys</span>(newCityInsuranceLogo3And4)</span><br><span class="line"><span class="comment">// 遍历出keysNumbers里面所有包含&#x27;company&#x27;的key</span></span><br><span class="line"><span class="keyword">const</span> companyKeys = keysNumbers.<span class="title function_">filter</span>(<span class="function"><span class="params">item</span> =&gt;</span> item.<span class="title function_">includes</span>(<span class="string">&#x27;company&#x27;</span>))</span><br><span class="line"><span class="comment">// 然后遍历companyKeys，然后把newCityInsuranceLogo3And4里面的值取出来，然后放到company数组里面,拼接成一个数组</span></span><br><span class="line"><span class="keyword">const</span> company = []</span><br><span class="line"><span class="keyword">const</span> companyObj = &#123;&#125;</span><br><span class="line"><span class="comment">// 这里把companyKeys里面的值取出来，然后放到companyObj,这个对象的key是保司名字，value是这个保司的logo的url</span></span><br><span class="line">companyKeys.<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> companyValue = newCityInsuranceLogo3And4[item]</span><br><span class="line">  companyObj[companyValue[<span class="number">0</span>]] = companyValue[<span class="number">1</span>]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+	
+	
+   <div>
+     <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:24px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+   </div>
+	
+        <div class="reward-container">
+  <div>技术原创：姚渐新，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="姚渐新 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="姚渐新 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>姚渐新
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/09/19/%E5%AF%B9%E8%B1%A1%E5%86%85url%E9%93%BE%E6%8E%A5%E5%A4%AA%E5%A4%9A%E6%97%B6%E7%9A%84%E4%BC%98%E5%8C%96/" title="对象内url链接太多时的优化">http://example.com/2023/09/19/对象内url链接太多时的优化/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/29/%E9%9A%8F%E7%AC%94%EF%BC%9A%E6%B5%85%E8%B0%88%E8%99%9A%E6%8B%9FDOM/" rel="prev" title="随笔：浅谈虚拟DOM">
+      <i class="fa fa-chevron-left"></i> 随笔：浅谈虚拟DOM
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/09/19/timeDown%E5%80%92%E8%AE%A1%E6%97%B6%E7%BB%84%E4%BB%B6/" rel="next" title="timeDown倒计时组件">
+      timeDown倒计时组件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="lv-container" data-id="city" data-uid="MTAyMC81NzEwMi8zMzU2Ng=="></div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%88%9D%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">最初的格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E9%80%A0%E5%90%8E%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">改造后的格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%A7%A3%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">问题解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E6%95%B0%E7%BB%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E7%94%A8%E5%AF%B9%E8%B1%A1%E4%B8%8D%E6%98%AF%E5%BE%88%E6%96%B9%E4%BE%BF%E5%90%97"><span class="nav-number">4.1.</span> <span class="nav-text">1、为什么要用数组格式，用对象不是很方便吗</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E7%AD%94"><span class="nav-number">4.1.1.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84%EF%BC%8C%E4%B8%8D%E5%8F%AF%E4%BB%A5%E6%8A%8A%E5%A4%9A%E4%B8%AA%E4%BF%9D%E5%8F%B8%E4%BB%A5%E5%8F%8A%E5%AF%B9%E5%BA%94%E7%9A%84logo%E5%90%88%E5%B9%B6%E6%88%90%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E5%90%97"><span class="nav-number">4.2.</span> <span class="nav-text">2、为什么要用一维数组，不可以把多个保司以及对应的logo合并成一个数组吗</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E7%AD%94-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">解答</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">5.</span> <span class="nav-text">其他</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="姚渐新"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">姚渐新</p>
+  <div class="site-description" itemprop="description">代码的世界还需要加油探索</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Felixhola" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Felixhola" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/yjxkq99" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;yjxkq99" rel="noopener" target="_blank"><i class="fab fa-codiepie fa-fw"></i>CSDN</a>
+      </span>
+  </div>
+
+
+
+      </div>
+		<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=350 height=86 src="//music.163.com/outchain/player?type=2&id=1842865092&auto=0&height=66"></iframe>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2022-08 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">姚渐新</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共34.3k字</span>
+</div>
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#lv-container'), () => {
+  window.livereOptions = {
+    refer: location.pathname.replace(CONFIG.root, '').replace('index.html', '')
+  };
+  (function(d, s) {
+    var j, e = d.getElementsByTagName(s)[0];
+    if (typeof LivereTower === 'function') { return; }
+    j = d.createElement(s);
+    j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+    j.async = true;
+    e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+});
+</script>
+
+    </div>
+</body>
+</html>
